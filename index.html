@@ -1,1 +1,2285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>우리둘 - Couple Signal</title>
+  <style>
+    :root {
+      --bg: #fff7f8;
+      --bg2: #fffaf3;
+      --card: rgba(255, 255, 255, 0.82);
+      --card-solid: #ffffff;
+      --primary: #ff7fa3;
+      --primary-dark: #f05c86;
+      --secondary: #b89cff;
+      --accent: #ffd6e5;
+      --accent2: #ffe8bd;
+      --text: #40333a;
+      --muted: #8a747d;
+      --soft: #fff0f4;
+      --success: #7dcfb6;
+      --warning: #ffc36b;
+      --danger: #ff9aa8;
+      --line: rgba(255, 127, 163, 0.18);
+      --shadow: 0 18px 45px rgba(255, 127, 163, 0.16);
+      --shadow2: 0 10px 24px rgba(64, 51, 58, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --bottom-nav-height: 78px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
 
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 8%, rgba(255, 214, 229, 0.95), transparent 30%),
+        radial-gradient(circle at 86% 18%, rgba(184, 156, 255, 0.28), transparent 28%),
+        linear-gradient(145deg, var(--bg), var(--bg2));
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      margin: 0 auto;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(255, 247, 248, 0.92), rgba(255, 250, 243, 0.94)),
+        url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff7fa3' fill-opacity='0.05'%3E%3Cpath d='M64 20c2 0 4 2 4 4s-2 4-4 4-4-2-4-4 2-4 4-4Zm-28 64c2 0 4 2 4 4s-2 4-4 4-4-2-4-4 2-4 4-4Zm60-8c2 0 4 2 4 4s-2 4-4 4-4-2-4-4 2-4 4-4Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      box-shadow: 0 0 55px rgba(64, 51, 58, 0.08);
+      overflow: hidden;
+    }
+
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding: 18px 16px calc(var(--bottom-nav-height) + var(--safe-bottom) + 24px);
+      animation: fadeIn 0.28s ease both;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floaty {
+      0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+      50% {
+        transform: translateY(-8px) rotate(2deg);
+      }
+    }
+
+    @keyframes popHeart {
+      0% {
+        opacity: 0;
+        transform: scale(0.7) translateY(10px);
+      }
+      40% {
+        opacity: 1;
+        transform: scale(1.12) translateY(-2px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -160px 0;
+      }
+      100% {
+        background-position: 160px 0;
+      }
+    }
+
+    @keyframes sparkle {
+      0%, 100% {
+        opacity: 0.45;
+        transform: scale(0.95) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.12) rotate(8deg);
+      }
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 45px;
+      height: 45px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(145deg, #ff7fa3, #b89cff);
+      box-shadow: 0 12px 26px rgba(255, 127, 163, 0.25);
+      font-size: 22px;
+      flex: 0 0 auto;
+    }
+
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand-title strong {
+      font-size: 21px;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .brand-title span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .date-pill {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      box-shadow: var(--shadow2);
+    }
+
+    .hero {
+      position: relative;
+      padding: 22px 18px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.82), transparent 25%),
+        linear-gradient(145deg, rgba(255, 214, 229, 0.95), rgba(255, 232, 189, 0.84) 48%, rgba(232, 220, 255, 0.8));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .hero::before {
+      content: "✦";
+      position: absolute;
+      right: 28px;
+      top: 18px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 28px;
+      animation: sparkle 2.4s infinite ease-in-out;
+    }
+
+    .hero::after {
+      content: "☁";
+      position: absolute;
+      right: -14px;
+      bottom: -20px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 96px;
+    }
+
+    .couple-names {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 25px;
+      letter-spacing: -0.8px;
+      line-height: 1.25;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 1;
+      margin: 8px 0 0;
+      color: rgba(64, 51, 58, 0.72);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 2px 10px;
+      gap: 10px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .card {
+      position: relative;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(16px);
+      margin-bottom: 12px;
+      overflow: hidden;
+      animation: fadeIn 0.25s ease both;
+    }
+
+    .card.solid {
+      background: var(--card-solid);
+    }
+
+    .card.soft-pink {
+      background: linear-gradient(145deg, rgba(255, 240, 244, 0.95), rgba(255, 255, 255, 0.78));
+    }
+
+    .card.soft-purple {
+      background: linear-gradient(145deg, rgba(243, 237, 255, 0.95), rgba(255, 255, 255, 0.78));
+    }
+
+    .card.soft-cream {
+      background: linear-gradient(145deg, rgba(255, 247, 222, 0.95), rgba(255, 255, 255, 0.78));
+    }
+
+    .status-card h3,
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      letter-spacing: -0.4px;
+    }
+
+    .status-card p,
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 12px 0 4px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 17px;
+      padding: 12px 14px;
+      background: #fff;
+      color: var(--text);
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: var(--shadow2);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 12px 28px rgba(255, 127, 163, 0.26);
+    }
+
+    .btn.secondary {
+      background: linear-gradient(135deg, #fff, #fff0f4);
+      color: var(--primary-dark);
+      border: 1px solid rgba(255, 127, 163, 0.22);
+    }
+
+    .btn.ghost {
+      background: rgba(255, 255, 255, 0.66);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .btn.safe {
+      background: linear-gradient(135deg, rgba(125, 207, 182, 0.96), rgba(184, 156, 255, 0.84));
+      color: #fff;
+    }
+
+    .btn.rest {
+      background: linear-gradient(135deg, #fff, #f7f2ff);
+      color: #7a63bb;
+      border: 1px solid rgba(184, 156, 255, 0.28);
+    }
+
+    .btn.warning {
+      background: linear-gradient(135deg, #fff6e4, #fff);
+      color: #b5781e;
+      border: 1px solid rgba(255, 195, 107, 0.36);
+    }
+
+    .btn.danger {
+      background: linear-gradient(135deg, #fff, #fff0f4);
+      color: #d84e73;
+      border: 1px solid rgba(255, 127, 163, 0.32);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+    }
+
+    .mini-stat {
+      padding: 13px 8px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      text-align: center;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 4px;
+      color: var(--primary-dark);
+    }
+
+    .mini-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .mood-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mood-item {
+      min-height: 70px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(255, 127, 163, 0.12);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 8px 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mood-item b {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 3px;
+      animation: floaty 3.4s ease-in-out infinite;
+    }
+
+    .page-heading {
+      margin: 4px 2px 16px;
+    }
+
+    .page-heading h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.8px;
+    }
+
+    .page-heading p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+
+    .signal-option {
+      position: relative;
+      min-height: 64px;
+      text-align: left;
+      border-radius: 22px;
+      padding: 14px 14px 14px 48px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(255, 127, 163, 0.18);
+      color: var(--text);
+      box-shadow: var(--shadow2);
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.35;
+      transition: 0.16s ease;
+    }
+
+    .signal-option::before {
+      content: attr(data-emoji);
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 22px;
+    }
+
+    .signal-option.selected {
+      border-color: rgba(255, 127, 163, 0.88);
+      background: linear-gradient(135deg, #fff, #fff0f5);
+      box-shadow: 0 12px 28px rgba(255, 127, 163, 0.18);
+      color: var(--primary-dark);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      margin: 0 0 7px 4px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .input,
+    .textarea,
+    .select-user {
+      width: 100%;
+      border: 1px solid rgba(255, 127, 163, 0.2);
+      background: rgba(255, 255, 255, 0.88);
+      border-radius: 18px;
+      padding: 13px 14px;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .input:focus,
+    .textarea:focus,
+    .select-user:focus {
+      border-color: rgba(255, 127, 163, 0.7);
+      box-shadow: 0 0 0 4px rgba(255, 127, 163, 0.12);
+    }
+
+    .small-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .signal-card {
+      border-radius: 23px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow2);
+      margin-bottom: 12px;
+    }
+
+    .signal-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 9px;
+    }
+
+    .avatar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #fff0f4;
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .time {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .signal-message {
+      font-size: 16px;
+      line-height: 1.45;
+      font-weight: 900;
+      margin: 8px 0;
+      letter-spacing: -0.3px;
+    }
+
+    .memo {
+      margin-top: 8px;
+      border-radius: 16px;
+      padding: 11px 12px;
+      background: rgba(255, 250, 243, 0.9);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 7px 9px;
+      font-size: 11px;
+      font-weight: 900;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .status-badge.pending {
+      color: #b5781e;
+      background: #fff6e4;
+      border-color: rgba(255, 195, 107, 0.35);
+    }
+
+    .status-badge.accepted {
+      color: #2b967c;
+      background: #eafff8;
+      border-color: rgba(125, 207, 182, 0.3);
+    }
+
+    .status-badge.declined {
+      color: #8a747d;
+      background: #f7f2ff;
+      border-color: rgba(184, 156, 255, 0.24);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px 12px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px dashed rgba(255, 127, 163, 0.25);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .empty-state .big {
+      display: block;
+      font-size: 38px;
+      margin-bottom: 8px;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .calendar-header h2 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: -0.5px;
+    }
+
+    .month-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      color: var(--primary-dark);
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: var(--shadow2);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .weekday {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      padding: 7px 0;
+    }
+
+    .day-cell {
+      position: relative;
+      min-height: 46px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(255, 127, 163, 0.09);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 7px;
+      transition: 0.14s ease;
+    }
+
+    .day-cell.empty {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .day-cell.today {
+      border-color: rgba(255, 127, 163, 0.7);
+      box-shadow: 0 0 0 3px rgba(255, 127, 163, 0.1);
+      color: var(--primary-dark);
+    }
+
+    .day-cell.selected {
+      background: linear-gradient(135deg, #fff0f4, #f4ecff);
+      border-color: rgba(184, 156, 255, 0.7);
+    }
+
+    .day-cell .heart {
+      position: absolute;
+      right: 5px;
+      bottom: 3px;
+      font-size: 14px;
+      animation: popHeart 0.35s ease both;
+    }
+
+    .record-list {
+      margin-top: 12px;
+    }
+
+    .record-item {
+      padding: 13px;
+      border-radius: 19px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      margin-bottom: 9px;
+    }
+
+    .record-item strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .record-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .question-card {
+      position: relative;
+      padding: 20px 17px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.85), transparent 26%),
+        linear-gradient(145deg, #fff0f4, #f4ecff);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .question-card::after {
+      content: "💌";
+      position: absolute;
+      right: 18px;
+      bottom: 12px;
+      font-size: 36px;
+      opacity: 0.42;
+      transform: rotate(8deg);
+    }
+
+    .question-card small {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--primary-dark);
+      font-weight: 900;
+      font-size: 11px;
+      margin-bottom: 11px;
+    }
+
+    .question-card h2 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.45;
+      letter-spacing: -0.7px;
+      word-break: keep-all;
+    }
+
+    .answer-card {
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+      padding: 14px;
+      margin-bottom: 10px;
+      animation: fadeIn 0.28s ease both;
+    }
+
+    .answer-card h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--primary-dark);
+    }
+
+    .answer-card p {
+      margin: 0;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .reveal-banner {
+      position: relative;
+      overflow: hidden;
+      padding: 15px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #fff0f4, #fff8e8, #f4ecff);
+      border: 1px solid rgba(255, 127, 163, 0.16);
+      margin-bottom: 12px;
+    }
+
+    .reveal-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      background-size: 160px 100%;
+      animation: shimmer 1.8s infinite linear;
+    }
+
+    .reveal-banner strong {
+      position: relative;
+      z-index: 1;
+      display: block;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .reveal-banner span {
+      position: relative;
+      z-index: 1;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .privacy-box {
+      border-radius: 24px;
+      padding: 15px;
+      background: linear-gradient(135deg, #fff6e4, #fff);
+      border: 1px solid rgba(255, 195, 107, 0.28);
+      color: #8b642d;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      z-index: 50;
+      width: 100%;
+      max-width: 430px;
+      height: calc(var(--bottom-nav-height) + var(--safe-bottom));
+      padding: 8px 10px calc(8px + var(--safe-bottom));
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(22px);
+      border-top: 1px solid rgba(255, 127, 163, 0.14);
+      box-shadow: 0 -12px 32px rgba(64, 51, 58, 0.08);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+
+    .nav-btn {
+      border-radius: 18px;
+      background: transparent;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      gap: 3px;
+      transition: 0.16s ease;
+      min-width: 0;
+    }
+
+    .nav-btn .icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .nav-btn.active {
+      color: var(--primary-dark);
+      background: linear-gradient(135deg, #fff0f4, #f5edff);
+      box-shadow: inset 0 0 0 1px rgba(255, 127, 163, 0.1);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 14px);
+      transform: translateX(-50%) translateY(20px);
+      z-index: 80;
+      width: calc(100% - 32px);
+      max-width: 398px;
+      padding: 13px 15px;
+      border-radius: 18px;
+      background: rgba(64, 51, 58, 0.92);
+      color: #fff;
+      box-shadow: 0 18px 40px rgba(64, 51, 58, 0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.22s ease;
+      font-size: 14px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 8px 2px 0;
+    }
+
+    .inline-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .three-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(255, 127, 163, 0.12);
+    }
+
+    .app-footer-note {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+      padding: 8px 4px 0;
+    }
+
+    @media (min-width: 431px) {
+      body {
+        background:
+          radial-gradient(circle at 20% 10%, rgba(255, 214, 229, 0.8), transparent 24%),
+          radial-gradient(circle at 80% 20%, rgba(184, 156, 255, 0.2), transparent 25%),
+          linear-gradient(145deg, #fff7f8, #fffaf3);
+      }
+
+      .app-shell {
+        min-height: 100vh;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .page {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero h1 {
+        font-size: 22px;
+      }
+
+      .summary-grid {
+        gap: 6px;
+      }
+
+      .mini-stat {
+        padding: 11px 5px;
+      }
+
+      .bottom-nav {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+
+      .nav-btn {
+        border-radius: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-shell">
+    <main id="app">
+      <section id="page-home" class="page active"></section>
+      <section id="page-signal" class="page"></section>
+      <section id="page-calendar" class="page"></section>
+      <section id="page-question" class="page"></section>
+      <section id="page-settings" class="page"></section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="하단 탭 메뉴">
+      <button class="nav-btn active" data-page="home" type="button">
+        <span class="icon">🏠</span>
+        <span>홈</span>
+      </button>
+      <button class="nav-btn" data-page="signal" type="button">
+        <span class="icon">💌</span>
+        <span>시그널</span>
+      </button>
+      <button class="nav-btn" data-page="calendar" type="button">
+        <span class="icon">🗓️</span>
+        <span>캘린더</span>
+      </button>
+      <button class="nav-btn" data-page="question" type="button">
+        <span class="icon">❣️</span>
+        <span>질문</span>
+      </button>
+      <button class="nav-btn" data-page="settings" type="button">
+        <span class="icon">⚙️</span>
+        <span>설정</span>
+      </button>
+    </nav>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script>
+    /********************************************************************
+     * 우리둘 - Couple Signal
+     * 단일 HTML / localStorage 데모 버전
+     *
+     * Firebase 확장 시 아래 DataStore의 load/save 부분만 교체하면 됩니다.
+     ********************************************************************/
+
+    const STORAGE_KEY = "wooridul_couple_signal_app_v1";
+
+    const APP_STATE = {
+      currentPage: "home",
+      selectedSignalMessage: "",
+      currentCalendarDate: new Date(),
+      selectedCalendarDateKey: getTodayKey()
+    };
+
+    const SIGNAL_OPTIONS = [
+      { emoji: "🤗", text: "오늘은 꼭 안아주고 싶어" },
+      { emoji: "🌙", text: "둘만의 시간이 필요해" },
+      { emoji: "🕯️", text: "조용히 가까이 있고 싶어" },
+      { emoji: "✨", text: "오늘 밤, 우리 시간 어때?" },
+      { emoji: "🧸", text: "가볍게 스킨십하고 싶어" },
+      { emoji: "✍️", text: "직접 입력" }
+    ];
+
+    const DAILY_QUESTIONS = [
+      "처음 서로에게 설렜던 순간은 언제였어?",
+      "요즘 내가 해줘서 고마웠던 일이 있어?",
+      "우리가 함께 가장 편안했던 순간은 언제야?",
+      "나에게 듣고 싶은 말이 있다면?",
+      "이번 주말에 같이 하고 싶은 건 뭐야?",
+      "내가 더 자주 표현해줬으면 하는 건?",
+      "우리 관계에서 가장 소중한 습관은 뭐라고 생각해?",
+      "요즘 나를 보면 어떤 생각이 들어?",
+      "내가 힘들 때 어떻게 곁에 있어주면 좋을까?",
+      "우리만의 작은 약속을 하나 만든다면?",
+      "최근에 나 때문에 웃었던 순간이 있었어?",
+      "우리가 함께 가보고 싶은 장소는 어디야?",
+      "내가 오늘 해주면 기분 좋아질 것 같은 일이 있어?",
+      "서로에게 더 다정해지기 위해 필요한 말은 뭐야?",
+      "우리의 하루 중 가장 좋아하는 시간은 언제야?",
+      "처음 손잡았던 기억이 아직 떠올라?",
+      "내가 어떤 모습일 때 가장 사랑스럽게 느껴져?",
+      "요즘 우리에게 필요한 휴식은 어떤 모습일까?",
+      "나에게 가장 고마웠던 말 한마디는 뭐였어?",
+      "함께 늙어간다면 어떤 일상을 보내고 싶어?",
+      "우리가 자주 잊지만 꼭 챙기고 싶은 것은 뭐야?",
+      "오늘 나에게 짧은 응원의 말을 해준다면?",
+      "우리 사이에 더 많이 생겼으면 하는 추억은?",
+      "같이 먹고 싶은 음식이 있다면?",
+      "내가 힘들어 보일 때 가장 먼저 해주고 싶은 말은?",
+      "우리의 첫 여행에서 가장 기억나는 장면은?",
+      "요즘 내가 노력하고 있다고 느낀 부분이 있어?",
+      "서로에게 가장 안전한 사람이 되려면 무엇이 필요할까?",
+      "오늘 나와 나누고 싶은 작은 비밀이 있어?",
+      "우리 둘만의 별명을 하나 만든다면?",
+      "사랑받고 있다고 느끼는 순간은 언제야?",
+      "다음 기념일에 같이 하고 싶은 건 뭐야?",
+      "우리가 서로에게 배운 좋은 점은 뭐야?",
+      "요즘 나에게 가장 듣고 싶은 칭찬은?",
+      "우리 집을 더 따뜻하게 만드는 작은 습관은?",
+      "같이 잠들기 전 하고 싶은 말은?",
+      "내가 자주 놓치는 네 마음이 있다면?",
+      "오늘의 우리를 색깔로 표현하면 무슨 색이야?",
+      "서로에게 더 솔직해지고 싶은 주제가 있어?",
+      "이번 달 우리에게 가장 필요한 데이트는?"
+    ];
+
+    let appData = loadAppData();
+
+    const DataStore = {
+      /**
+       * 현재는 localStorage를 사용합니다.
+       * Firebase Realtime Database로 교체할 때는 이 객체의 load/save만 바꾸면 됩니다.
+       */
+      load() {
+        return loadAppData();
+      },
+      save(data) {
+        saveAppData(data);
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      bindNavigation();
+      renderApp();
+    });
+
+    function getDefaultData() {
+      return {
+        users: {
+          userA: { name: "태연" },
+          userB: { name: "성훈" }
+        },
+        couple: {
+          startDate: ""
+        },
+        signals: [],
+        records: [],
+        questions: {}
+      };
+    }
+
+    function getTodayKey(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function getMonthKey(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      return `${y}-${m}`;
+    }
+
+    function loadAppData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return getDefaultData();
+
+        const parsed = JSON.parse(raw);
+        const defaults = getDefaultData();
+
+        return {
+          ...defaults,
+          ...parsed,
+          users: {
+            ...defaults.users,
+            ...(parsed.users || {})
+          },
+          couple: {
+            ...defaults.couple,
+            ...(parsed.couple || {})
+          },
+          signals: Array.isArray(parsed.signals) ? parsed.signals : [],
+          records: Array.isArray(parsed.records) ? parsed.records : [],
+          questions: parsed.questions && typeof parsed.questions === "object" ? parsed.questions : {}
+        };
+      } catch (error) {
+        console.error("데이터 불러오기 실패:", error);
+        return getDefaultData();
+      }
+    }
+
+    function saveAppData(data = appData) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function createId(prefix = "id") {
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDateKorean(dateInput = new Date()) {
+      const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+      return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "short"
+      }).format(date);
+    }
+
+    function formatShortDate(dateInput) {
+      if (!dateInput) return "-";
+      const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+      if (Number.isNaN(date.getTime())) return "-";
+      return new Intl.DateTimeFormat("ko-KR", {
+        month: "short",
+        day: "numeric",
+        weekday: "short"
+      }).format(date);
+    }
+
+    function formatTime(dateInput) {
+      if (!dateInput) return "-";
+      const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+      if (Number.isNaN(date.getTime())) return "-";
+      return new Intl.DateTimeFormat("ko-KR", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(date);
+    }
+
+    function getUserName(userKey) {
+      return appData.users?.[userKey]?.name || (userKey === "userA" ? "나" : "배우자");
+    }
+
+    function getOtherUserKey(userKey) {
+      return userKey === "userA" ? "userB" : "userA";
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    function bindNavigation() {
+      document.querySelectorAll(".nav-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          const page = button.dataset.page;
+          navigateTo(page);
+        });
+      });
+    }
+
+    function navigateTo(page) {
+      APP_STATE.currentPage = page;
+
+      document.querySelectorAll(".nav-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.page === page);
+      });
+
+      document.querySelectorAll(".page").forEach((section) => {
+        section.classList.toggle("active", section.id === `page-${page}`);
+      });
+
+      renderApp();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderApp() {
+      appData = DataStore.load();
+
+      renderHome();
+      renderSignalPage();
+      renderCalendarPage();
+      renderQuestionPage();
+      renderSettingsPage();
+    }
+
+    function renderCommonTopbar(subtitle = "둘만의 다정한 기록") {
+      return `
+        <div class="topbar">
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true">💞</div>
+            <div class="brand-title">
+              <strong>우리둘</strong>
+              <span>${escapeHTML(subtitle)}</span>
+            </div>
+          </div>
+          <div class="date-pill">${escapeHTML(formatShortDate(new Date()))}</div>
+        </div>
+      `;
+    }
+
+    function getTodayStatusText() {
+      const today = getTodayKey();
+      const todaySignals = appData.signals.filter((s) => (s.createdAt || "").slice(0, 10) === today);
+      const pending = todaySignals.find((s) => s.status === "pending");
+      const accepted = todaySignals.find((s) => s.status === "accepted" && s.completed !== true && s.completed !== false);
+      const completed = appData.records.find((r) => r.date === today);
+
+      if (completed) {
+        return {
+          title: "오늘 마음이 닿았어요.",
+          body: "둘만의 따뜻한 시간이 조용히 기록되었어요.",
+          icon: "💗"
+        };
+      }
+
+      if (accepted) {
+        return {
+          title: "둘만의 시간이 약속되었어요.",
+          body: "나중에 원할 때만 부드럽게 기록해도 괜찮아요.",
+          icon: "🌙"
+        };
+      }
+
+      if (pending) {
+        return {
+          title: "따뜻한 시그널이 기다리고 있어요.",
+          body: "서로의 마음을 천천히 확인해보세요.",
+          icon: "💌"
+        };
+      }
+
+      return {
+        title: "오늘 우리 분위기는 어때요?",
+        body: "아직 보낸 시그널이 없어요. 말로 꺼내기 쑥스러운 마음을 부드럽게 전해보세요.",
+        icon: "🧸"
+      };
+    }
+
+    function getMonthRecords(date = new Date()) {
+      const monthKey = getMonthKey(date);
+      return appData.records.filter((record) => record.date && record.date.startsWith(monthKey));
+    }
+
+    function getLatestRecord() {
+      if (!appData.records.length) return null;
+      return [...appData.records].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+    }
+
+    function getTodayQuestionData() {
+      const today = getTodayKey();
+      return getTodayQuestion(today);
+    }
+
+    function renderHome() {
+      const page = document.getElementById("page-home");
+      const status = getTodayStatusText();
+      const monthRecords = getMonthRecords(new Date());
+      const latestRecord = getLatestRecord();
+      const todayQuestion = getTodayQuestionData();
+      const questionDone = todayQuestion.revealed ? "완료" : "진행중";
+
+      page.innerHTML = `
+        ${renderCommonTopbar("Couple Signal")}
+
+        <section class="hero">
+          <div class="couple-names">
+            <span>${escapeHTML(getUserName("userA"))}</span>
+            <span>❤️</span>
+            <span>${escapeHTML(getUserName("userB"))}</span>
+          </div>
+          <h1>오늘도 우리답게<br />다정한 마음을 나눠요</h1>
+          <p>${escapeHTML(formatDateKorean(new Date()))}</p>
+        </section>
+
+        <section class="card soft-pink status-card">
+          <h3>${status.icon} ${escapeHTML(status.title)}</h3>
+          <p>${escapeHTML(status.body)}</p>
+          <div class="quick-grid">
+            <button class="btn primary" type="button" onclick="navigateTo('signal')">시그널 보내기</button>
+            <button class="btn secondary" type="button" onclick="navigateTo('question')">오늘의 질문</button>
+          </div>
+        </section>
+
+        <div class="section-title">
+          <h2>최근 기록 요약</h2>
+          <span>우리만 보기</span>
+        </div>
+
+        <section class="card solid">
+          <div class="summary-grid">
+            <div class="mini-stat">
+              <strong>${monthRecords.length}</strong>
+              <span>이번 달<br />둘만의 시간</span>
+            </div>
+            <div class="mini-stat">
+              <strong>${latestRecord ? formatShortDate(latestRecord.date) : "-"}</strong>
+              <span>최근<br />기록 날짜</span>
+            </div>
+            <div class="mini-stat">
+              <strong>${escapeHTML(questionDone)}</strong>
+              <span>오늘 질문<br />답변 상태</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="section-title">
+          <h2>오늘의 무드 조각</h2>
+          <span>부드럽게 표현하기</span>
+        </div>
+
+        <section class="card soft-cream">
+          <p>말로 하기 어려운 마음도 작은 그림처럼 남길 수 있어요.</p>
+          <div class="mood-row">
+            <div class="mood-item"><span><b>🌙</b>차분함</span></div>
+            <div class="mood-item"><span><b>💌</b>기다림</span></div>
+            <div class="mood-item"><span><b>⭐</b>설렘</span></div>
+            <div class="mood-item"><span><b>🧸</b>포근함</span></div>
+          </div>
+        </section>
+
+        <section class="card soft-purple">
+          <h3>작은 안내</h3>
+          <p>시그널은 약속이나 의무가 아니라 마음을 전하는 부드러운 표현이에요. 오늘은 쉬어가도 괜찮아요.</p>
+        </section>
+      `;
+    }
+
+    function renderSignalPage() {
+      const page = document.getElementById("page-signal");
+
+      const pendingSignals = appData.signals
+        .filter((s) => s.status === "pending")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      const acceptedSignals = appData.signals
+        .filter((s) => s.status === "accepted" && s.completed !== true && s.completed !== false)
+        .sort((a, b) => new Date(b.respondedAt || b.createdAt) - new Date(a.respondedAt || a.createdAt));
+
+      const recentSignals = appData.signals
+        .slice()
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 5);
+
+      page.innerHTML = `
+        ${renderCommonTopbar("따뜻한 마음 보내기")}
+
+        <div class="page-heading">
+          <h1>오늘의 시그널 보내기</h1>
+          <p>말로 꺼내기 쑥스러운 마음을 부드럽게 전해보세요.</p>
+        </div>
+
+        <section class="card soft-pink">
+          <div class="form-group">
+            <label for="signalSender">보내는 사람</label>
+            <select id="signalSender" class="select-user">
+              <option value="userA">${escapeHTML(getUserName("userA"))}</option>
+              <option value="userB">${escapeHTML(getUserName("userB"))}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>시그널 선택</label>
+            <div class="signal-grid">
+              ${SIGNAL_OPTIONS.map((option) => `
+                <button
+                  type="button"
+                  class="signal-option ${APP_STATE.selectedSignalMessage === option.text ? "selected" : ""}"
+                  data-emoji="${escapeHTML(option.emoji)}"
+                  onclick="selectSignalMessage('${escapeJS(option.text)}')"
+                >
+                  ${escapeHTML(option.text)}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <div id="customSignalWrap" class="form-group" style="${APP_STATE.selectedSignalMessage === "직접 입력" ? "" : "display:none;"}">
+            <label for="customSignal">직접 입력</label>
+            <input id="customSignal" class="input" type="text" placeholder="예: 오늘은 조금 더 가까이 있고 싶어" />
+          </div>
+
+          <div class="form-group">
+            <label for="signalMemo">메모</label>
+            <textarea id="signalMemo" class="textarea" placeholder="전하고 싶은 말을 짧게 남겨보세요."></textarea>
+          </div>
+
+          <button class="btn primary" type="button" onclick="handleCreateSignal()">시그널 보내기</button>
+          <p class="hint">상대방은 언제든 편하게 수락하거나 쉬어가기로 선택할 수 있어요.</p>
+        </section>
+
+        <div class="section-title">
+          <h2>받은 시그널</h2>
+          <span>${pendingSignals.length}개 대기중</span>
+        </div>
+
+        <section>
+          ${pendingSignals.length ? pendingSignals.map(renderPendingSignalCard).join("") : `
+            <div class="empty-state">
+              <span class="big">💌</span>
+              아직 기다리는 시그널이 없어요.<br />
+              마음이 준비되면 천천히 보내보세요.
+            </div>
+          `}
+        </section>
+
+        <div class="section-title">
+          <h2>약속된 둘만의 시간</h2>
+          <span>기록은 선택이에요</span>
+        </div>
+
+        <section>
+          ${acceptedSignals.length ? acceptedSignals.map(renderAcceptedSignalCard).join("") : `
+            <div class="empty-state">
+              <span class="big">🌙</span>
+              아직 기록을 기다리는 약속이 없어요.<br />
+              오늘은 쉬어가도 괜찮아요.
+            </div>
+          `}
+        </section>
+
+        <div class="section-title">
+          <h2>최근 시그널</h2>
+          <span>최근 5개</span>
+        </div>
+
+        <section>
+          ${recentSignals.length ? recentSignals.map(renderRecentSignalCard).join("") : `
+            <div class="empty-state">
+              <span class="big">✨</span>
+              아직 시그널 기록이 없어요.
+            </div>
+          `}
+        </section>
+      `;
+    }
+
+    function escapeJS(value) {
+      return String(value ?? "")
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll("\n", "\\n")
+        .replaceAll("\r", "");
+    }
+
+    function selectSignalMessage(message) {
+      APP_STATE.selectedSignalMessage = message;
+      renderSignalPage();
+    }
+
+    function handleCreateSignal() {
+      const sender = document.getElementById("signalSender").value;
+      const memo = document.getElementById("signalMemo").value.trim();
+
+      let message = APP_STATE.selectedSignalMessage;
+
+      if (!message) {
+        showToast("먼저 전하고 싶은 시그널을 선택해주세요.");
+        return;
+      }
+
+      if (message === "직접 입력") {
+        message = document.getElementById("customSignal").value.trim();
+        if (!message) {
+          showToast("직접 전하고 싶은 말을 입력해주세요.");
+          return;
+        }
+      }
+
+      createSignal(sender, message, memo);
+      APP_STATE.selectedSignalMessage = "";
+      showToast("따뜻한 시그널을 보냈어요.");
+      renderApp();
+    }
+
+    function createSignal(sender, message, memo = "") {
+      const receiver = getOtherUserKey(sender);
+
+      const signal = {
+        id: createId("signal"),
+        sender,
+        receiver,
+        message,
+        memo,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+        respondedAt: null,
+        completed: null,
+        completedAt: null
+      };
+
+      appData.signals.unshift(signal);
+      DataStore.save(appData);
+
+      return signal;
+    }
+
+    function respondSignal(signalId, status) {
+      const signal = appData.signals.find((item) => item.id === signalId);
+      if (!signal) return;
+
+      signal.status = status;
+      signal.respondedAt = new Date().toISOString();
+
+      if (status === "declined") {
+        signal.completed = false;
+        signal.completedAt = null;
+      }
+
+      DataStore.save(appData);
+
+      if (status === "accepted") {
+        showToast("마음이 닿았어요. 둘만의 시간이 약속되었어요.");
+      } else {
+        showToast("오늘은 쉬어가기로 했어요. 마음은 잘 전달되었어요.");
+      }
+
+      renderApp();
+    }
+
+    function confirmCompleted(signalId, answer) {
+      const signal = appData.signals.find((item) => item.id === signalId);
+      if (!signal) return;
+
+      if (answer === "yes") {
+        signal.completed = true;
+        signal.completedAt = new Date().toISOString();
+        addRecord(signal);
+        DataStore.save(appData);
+        showToast("둘만의 시간이 따뜻하게 기록되었어요.");
+      }
+
+      if (answer === "notYet") {
+        signal.completed = null;
+        DataStore.save(appData);
+        showToast("괜찮아요. 천천히 기록해도 돼요.");
+      }
+
+      if (answer === "skip") {
+        signal.completed = false;
+        signal.completedAt = new Date().toISOString();
+        DataStore.save(appData);
+        showToast("기록하지 않기로 했어요. 선택은 존중되어요.");
+      }
+
+      renderApp();
+    }
+
+    function addRecord(signal) {
+      const today = getTodayKey();
+
+      const exists = appData.records.some((record) => record.signalId === signal.id);
+      if (exists) return;
+
+      const record = {
+        id: createId("record"),
+        date: today,
+        signalId: signal.id,
+        message: signal.message,
+        memo: signal.memo || "",
+        createdAt: new Date().toISOString()
+      };
+
+      appData.records.unshift(record);
+    }
+
+    function getSignalStatusLabel(status) {
+      if (status === "pending") return "기다리는 중";
+      if (status === "accepted") return "마음이 닿음";
+      if (status === "declined") return "쉬어가기로 함";
+      return "기록됨";
+    }
+
+    function renderPendingSignalCard(signal) {
+      return `
+        <article class="signal-card">
+          <div class="signal-card-header">
+            <span class="avatar-chip">💌 ${escapeHTML(getUserName(signal.sender))}의 마음</span>
+            <span class="time">${escapeHTML(formatTime(signal.createdAt))}</span>
+          </div>
+          <div class="signal-message">${escapeHTML(signal.message)}</div>
+          ${signal.memo ? `<div class="memo">${escapeHTML(signal.memo)}</div>` : ""}
+          <div class="inline-actions">
+            <button class="btn safe" type="button" onclick="respondSignal('${escapeJS(signal.id)}', 'accepted')">좋아, 함께할래</button>
+            <button class="btn rest" type="button" onclick="respondSignal('${escapeJS(signal.id)}', 'declined')">오늘은 쉬고 싶어</button>
+          </div>
+          <p class="hint">거절해도 괜찮아요. 마음은 잘 전달되었어요.</p>
+        </article>
+      `;
+    }
+
+    function renderAcceptedSignalCard(signal) {
+      return `
+        <article class="signal-card">
+          <div class="signal-card-header">
+            <span class="status-badge accepted">🌙 둘만의 시간이 약속되었어요</span>
+            <span class="time">${escapeHTML(formatTime(signal.respondedAt || signal.createdAt))}</span>
+          </div>
+          <div class="signal-message">${escapeHTML(signal.message)}</div>
+          ${signal.memo ? `<div class="memo">${escapeHTML(signal.memo)}</div>` : ""}
+          <div class="divider"></div>
+          <h3 style="margin:0 0 7px;font-size:15px;">오늘 둘만의 시간이 있었나요?</h3>
+          <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5;">
+            기록은 선택이에요. 남기지 않아도 괜찮아요.
+          </p>
+          <div class="three-actions">
+            <button class="btn primary" type="button" onclick="confirmCompleted('${escapeJS(signal.id)}', 'yes')">응, 함께했어요</button>
+            <button class="btn warning" type="button" onclick="confirmCompleted('${escapeJS(signal.id)}', 'notYet')">아직 아니에요</button>
+            <button class="btn ghost" type="button" onclick="confirmCompleted('${escapeJS(signal.id)}', 'skip')">기록하지 않을래요</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderRecentSignalCard(signal) {
+      return `
+        <article class="signal-card">
+          <div class="signal-card-header">
+            <span class="avatar-chip">💗 ${escapeHTML(getUserName(signal.sender))} → ${escapeHTML(getUserName(signal.receiver))}</span>
+            <span class="status-badge ${escapeHTML(signal.status)}">${escapeHTML(getSignalStatusLabel(signal.status))}</span>
+          </div>
+          <div class="signal-message">${escapeHTML(signal.message)}</div>
+          ${signal.memo ? `<div class="memo">${escapeHTML(signal.memo)}</div>` : ""}
+          <p class="hint">${escapeHTML(formatTime(signal.createdAt))}</p>
+        </article>
+      `;
+    }
+
+    function renderCalendarPage() {
+      const page = document.getElementById("page-calendar");
+      const monthDate = APP_STATE.currentCalendarDate;
+      const year = monthDate.getFullYear();
+      const month = monthDate.getMonth();
+
+      const monthRecords = getMonthRecords(monthDate);
+      const latestRecord = monthRecords.length
+        ? [...monthRecords].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]
+        : null;
+
+      const acceptedCount = appData.signals.filter((s) => s.status === "accepted").length;
+      const respondedCount = appData.signals.filter((s) => s.status === "accepted" || s.status === "declined").length;
+      const acceptRate = respondedCount ? Math.round((acceptedCount / respondedCount) * 100) : 0;
+
+      const selectedRecords = appData.records.filter((record) => record.date === APP_STATE.selectedCalendarDateKey);
+
+      page.innerHTML = `
+        ${renderCommonTopbar("우리의 작은 달력")}
+
+        <div class="page-heading">
+          <h1>둘만의 캘린더</h1>
+          <p>함께한 시간은 하트로 조용히 남겨져요.</p>
+        </div>
+
+        <section class="card soft-cream">
+          <div class="summary-grid">
+            <div class="mini-stat">
+              <strong>${monthRecords.length}</strong>
+              <span>이번 달<br />기록</span>
+            </div>
+            <div class="mini-stat">
+              <strong>${latestRecord ? formatShortDate(latestRecord.date) : "-"}</strong>
+              <span>최근<br />기록</span>
+            </div>
+            <div class="mini-stat">
+              <strong>${acceptRate}%</strong>
+              <span>시그널<br />수락률</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card solid">
+          <div class="calendar-header">
+            <button class="month-btn" type="button" onclick="moveMonth(-1)" aria-label="이전 달">‹</button>
+            <h2>${year}년 ${month + 1}월</h2>
+            <button class="month-btn" type="button" onclick="moveMonth(1)" aria-label="다음 달">›</button>
+          </div>
+
+          <div class="calendar-grid">
+            ${["일", "월", "화", "수", "목", "금", "토"].map((day) => `<div class="weekday">${day}</div>`).join("")}
+            ${renderCalendarDays(year, month)}
+          </div>
+        </section>
+
+        <div class="section-title">
+          <h2>선택한 날짜</h2>
+          <span>${escapeHTML(APP_STATE.selectedCalendarDateKey)}</span>
+        </div>
+
+        <section class="record-list">
+          ${selectedRecords.length ? selectedRecords.map(renderRecordItem).join("") : `
+            <div class="empty-state">
+              <span class="big">🤍</span>
+              이 날짜에는 아직 기록이 없어요.<br />
+              기록하지 않은 날도 소중한 우리 시간이었을 수 있어요.
+            </div>
+          `}
+        </section>
+      `;
+    }
+
+    function renderCalendarDays(year, month) {
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startWeekday = firstDay.getDay();
+      const totalDays = lastDay.getDate();
+
+      const cells = [];
+
+      for (let i = 0; i < startWeekday; i++) {
+        cells.push(`<button type="button" class="day-cell empty" aria-hidden="true"></button>`);
+      }
+
+      for (let day = 1; day <= totalDays; day++) {
+        const date = new Date(year, month, day);
+        const key = getTodayKey(date);
+        const hasRecord = appData.records.some((record) => record.date === key);
+        const isToday = key === getTodayKey();
+        const isSelected = key === APP_STATE.selectedCalendarDateKey;
+
+        cells.push(`
+          <button
+            type="button"
+            class="day-cell ${isToday ? "today" : ""} ${isSelected ? "selected" : ""}"
+            onclick="selectCalendarDate('${key}')"
+            aria-label="${key}"
+          >
+            <span>${day}</span>
+            ${hasRecord ? `<span class="heart">💗</span>` : ""}
+          </button>
+        `);
+      }
+
+      return cells.join("");
+    }
+
+    function selectCalendarDate(dateKey) {
+      APP_STATE.selectedCalendarDateKey = dateKey;
+      renderCalendarPage();
+    }
+
+    function moveMonth(delta) {
+      const current = APP_STATE.currentCalendarDate;
+      APP_STATE.currentCalendarDate = new Date(current.getFullYear(), current.getMonth() + delta, 1);
+      const newMonthKey = getMonthKey(APP_STATE.currentCalendarDate);
+      const selectedMonthKey = APP_STATE.selectedCalendarDateKey.slice(0, 7);
+
+      if (newMonthKey !== selectedMonthKey) {
+        APP_STATE.selectedCalendarDateKey = getTodayKey(APP_STATE.currentCalendarDate);
+      }
+
+      renderCalendarPage();
+    }
+
+    function renderRecordItem(record) {
+      return `
+        <article class="record-item">
+          <strong>💗 둘만의 시간이 기록되었어요.</strong>
+          <span>${escapeHTML(record.message || "따뜻한 시간이 있었어요.")}</span>
+          ${record.memo ? `<span style="margin-top:5px;">메모: ${escapeHTML(record.memo)}</span>` : ""}
+          <span style="margin-top:5px;">기록 시간: ${escapeHTML(formatTime(record.createdAt))}</span>
+        </article>
+      `;
+    }
+
+    function getTodayQuestion(dateKey = getTodayKey()) {
+      if (!appData.questions[dateKey]) {
+        const date = new Date(dateKey + "T00:00:00");
+        const start = new Date(date.getFullYear(), 0, 0);
+        const diff = date - start;
+        const dayOfYear = Math.floor(diff / 86400000);
+        const question = DAILY_QUESTIONS[dayOfYear % DAILY_QUESTIONS.length];
+
+        appData.questions[dateKey] = {
+          date: dateKey,
+          question,
+          answers: {
+            userA: {
+              text: "",
+              createdAt: null
+            },
+            userB: {
+              text: "",
+              createdAt: null
+            }
+          },
+          revealed: false
+        };
+
+        DataStore.save(appData);
+      }
+
+      return appData.questions[dateKey];
+    }
+
+    function renderQuestionPage() {
+      const page = document.getElementById("page-question");
+      const todayKey = getTodayKey();
+      const dailyQuestion = getTodayQuestion(todayKey);
+      const userAAnswered = !!dailyQuestion.answers.userA.text;
+      const userBAnswered = !!dailyQuestion.answers.userB.text;
+
+      page.innerHTML = `
+        ${renderCommonTopbar("매일 하나의 마음 질문")}
+
+        <div class="page-heading">
+          <h1>오늘의 질문</h1>
+          <p>두 사람이 모두 답변하면 서로의 마음이 열려요.</p>
+        </div>
+
+        <section class="question-card">
+          <small>${escapeHTML(formatDateKorean(new Date()))}</small>
+          <h2>${escapeHTML(dailyQuestion.question)}</h2>
+        </section>
+
+        ${dailyQuestion.revealed ? `
+          <section class="reveal-banner">
+            <strong>💞 마음이 열렸어요</strong>
+            <span>두 사람의 답변이 함께 공개되었어요.</span>
+          </section>
+        ` : `
+          <section class="card soft-purple">
+            <h3>아직 마음이 열리는 중이에요</h3>
+            <p>
+              ${userAAnswered ? "한 사람의 답변이 저장되었어요. " : ""}
+              ${userBAnswered ? "또 한 사람의 답변도 저장되었어요. " : ""}
+              두 사람이 모두 답변하면 예쁜 카드로 공개됩니다.
+            </p>
+          </section>
+        `}
+
+        <section class="card solid">
+          <div class="form-group">
+            <label for="answerUserA">${escapeHTML(getUserName("userA"))}의 답변</label>
+            <textarea
+              id="answerUserA"
+              class="textarea"
+              placeholder="오늘의 마음을 적어보세요."
+            >${escapeHTML(dailyQuestion.answers.userA.text)}</textarea>
+          </div>
+
+          <button class="btn secondary" type="button" onclick="saveAnswer('userA')">
+            ${userAAnswered ? "답변 수정하기" : "답변 저장하기"}
+          </button>
+
+          <div class="divider"></div>
+
+          <div class="form-group">
+            <label for="answerUserB">${escapeHTML(getUserName("userB"))}의 답변</label>
+            <textarea
+              id="answerUserB"
+              class="textarea"
+              placeholder="상대에게 들려주고 싶은 마음을 적어보세요."
+            >${escapeHTML(dailyQuestion.answers.userB.text)}</textarea>
+          </div>
+
+          <button class="btn secondary" type="button" onclick="saveAnswer('userB')">
+            ${userBAnswered ? "답변 수정하기" : "답변 저장하기"}
+          </button>
+        </section>
+
+        <section>
+          ${dailyQuestion.revealed ? renderRevealedAnswers(dailyQuestion) : `
+            <div class="empty-state">
+              <span class="big">🔒</span>
+              한 명만 답변했을 때는 상대 답변이 보이지 않아요.<br />
+              두 마음이 모두 도착하면 함께 열려요.
+            </div>
+          `}
+        </section>
+      `;
+    }
+
+    function saveAnswer(userKey) {
+      const todayKey = getTodayKey();
+      const dailyQuestion = getTodayQuestion(todayKey);
+      const inputId = userKey === "userA" ? "answerUserA" : "answerUserB";
+      const text = document.getElementById(inputId).value.trim();
+
+      if (!text) {
+        showToast("답변을 먼저 적어주세요.");
+        return;
+      }
+
+      dailyQuestion.answers[userKey] = {
+        text,
+        createdAt: new Date().toISOString()
+      };
+
+      const bothAnswered = !!dailyQuestion.answers.userA.text && !!dailyQuestion.answers.userB.text;
+      dailyQuestion.revealed = bothAnswered;
+
+      appData.questions[todayKey] = dailyQuestion;
+      DataStore.save(appData);
+
+      if (bothAnswered) {
+        showToast("두 사람의 답변이 공개되었어요.");
+      } else {
+        showToast("답변이 저장되었어요.");
+      }
+
+      renderApp();
+    }
+
+    function renderRevealedAnswers(dailyQuestion) {
+      return `
+        <article class="answer-card">
+          <h3>💗 ${escapeHTML(getUserName("userA"))}의 마음</h3>
+          <p>${escapeHTML(dailyQuestion.answers.userA.text)}</p>
+        </article>
+
+        <article class="answer-card">
+          <h3>💜 ${escapeHTML(getUserName("userB"))}의 마음</h3>
+          <p>${escapeHTML(dailyQuestion.answers.userB.text)}</p>
+        </article>
+      `;
+    }
+
+    function renderSettingsPage() {
+      const page = document.getElementById("page-settings");
+
+      page.innerHTML = `
+        ${renderCommonTopbar("프라이버시와 설정")}
+
+        <div class="page-heading">
+          <h1>설정</h1>
+          <p>둘만의 이름과 시작일을 다정하게 정리해보세요.</p>
+        </div>
+
+        <section class="card solid">
+          <div class="form-group">
+            <label for="nameUserA">사용자 A 닉네임</label>
+            <input id="nameUserA" class="input" type="text" value="${escapeHTML(getUserName("userA"))}" />
+          </div>
+
+          <div class="form-group">
+            <label for="nameUserB">사용자 B 닉네임</label>
+            <input id="nameUserB" class="input" type="text" value="${escapeHTML(getUserName("userB"))}" />
+          </div>
+
+          <div class="form-group">
+            <label for="startDate">커플 시작일</label>
+            <input id="startDate" class="input" type="date" value="${escapeHTML(appData.couple.startDate || "")}" />
+          </div>
+
+          <button class="btn primary" type="button" onclick="saveSettings()">설정 저장</button>
+        </section>
+
+        <section class="card soft-cream">
+          <h3>앱 잠금 안내</h3>
+          <div class="privacy-box">
+            이 앱은 둘만의 민감한 기록을 다룰 수 있어요. 실제 서비스에서는 반드시 로그인, 암호화, 앱 잠금 기능을 적용해야 합니다.
+          </div>
+          <div class="tag-list">
+            <span class="tag">🔐 PIN 잠금</span>
+            <span class="tag">🛡️ 암호화</span>
+            <span class="tag">👥 부부 초대</span>
+            <span class="tag">☁️ Firebase 동기화</span>
+          </div>
+        </section>
+
+        <section class="card solid">
+          <h3>데모 관리</h3>
+          <p>테스트용 기록을 만들거나 모든 데이터를 초기화할 수 있어요.</p>
+          <div class="inline-actions">
+            <button class="btn secondary" type="button" onclick="createDemoData()">데모 데이터 생성</button>
+            <button class="btn danger" type="button" onclick="resetData()">데이터 초기화</button>
+          </div>
+        </section>
+
+        <section class="card soft-purple">
+          <h3>저장 방식</h3>
+          <p>현재 버전은 브라우저 localStorage에 저장됩니다. 같은 기기와 같은 브라우저에서만 유지돼요.</p>
+          <p class="app-footer-note">
+            추후 확장 아이디어:
+            Firebase Authentication 로그인,
+            부부 초대 코드,
+            Firebase Realtime Database 실시간 동기화,
+            민감 기록 암호화,
+            앱 잠금 PIN,
+            PWA 설치 지원,
+            푸시 알림,
+            커플 기념일 알림,
+            질문 카테고리 추가,
+            관계 만족도 체크인,
+            감정 다이어리.
+          </p>
+        </section>
+      `;
+    }
+
+    function saveSettings() {
+      const nameA = document.getElementById("nameUserA").value.trim() || "나";
+      const nameB = document.getElementById("nameUserB").value.trim() || "배우자";
+      const startDate = document.getElementById("startDate").value;
+
+      appData.users.userA.name = nameA;
+      appData.users.userB.name = nameB;
+      appData.couple.startDate = startDate;
+
+      DataStore.save(appData);
+      showToast("설정이 저장되었어요.");
+      renderApp();
+    }
+
+    function resetData() {
+      const ok = confirm("모든 시그널, 캘린더, 질문 답변 기록이 삭제됩니다. 정말 초기화할까요?");
+      if (!ok) return;
+
+      appData = getDefaultData();
+      APP_STATE.selectedSignalMessage = "";
+      APP_STATE.currentCalendarDate = new Date();
+      APP_STATE.selectedCalendarDateKey = getTodayKey();
+
+      DataStore.save(appData);
+      showToast("데이터가 초기화되었어요.");
+      renderApp();
+      navigateTo("home");
+    }
+
+    function createDemoData() {
+      const now = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(now.getDate() - 1);
+
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(now.getDate() - 3);
+
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(now.getDate() - 7);
+
+      const demoSignal1 = {
+        id: createId("signal"),
+        sender: "userA",
+        receiver: "userB",
+        message: "오늘은 꼭 안아주고 싶어",
+        memo: "퇴근하고 따뜻한 차 한 잔 같이 마시자.",
+        status: "accepted",
+        createdAt: threeDaysAgo.toISOString(),
+        respondedAt: threeDaysAgo.toISOString(),
+        completed: true,
+        completedAt: threeDaysAgo.toISOString()
+      };
+
+      const demoSignal2 = {
+        id: createId("signal"),
+        sender: "userB",
+        receiver: "userA",
+        message: "조용히 가까이 있고 싶어",
+        memo: "말없이 같이 누워 있어도 좋을 것 같아.",
+        status: "accepted",
+        createdAt: yesterday.toISOString(),
+        respondedAt: yesterday.toISOString(),
+        completed: true,
+        completedAt: yesterday.toISOString()
+      };
+
+      const demoSignal3 = {
+        id: createId("signal"),
+        sender: "userA",
+        receiver: "userB",
+        message: "둘만의 시간이 필요해",
+        memo: "오늘 컨디션 괜찮으면 천천히 이야기해보자.",
+        status: "pending",
+        createdAt: now.toISOString(),
+        respondedAt: null,
+        completed: null,
+        completedAt: null
+      };
+
+      const demoSignal4 = {
+        id: createId("signal"),
+        sender: "userB",
+        receiver: "userA",
+        message: "오늘은 조금 더 다정하게 있고 싶어",
+        memo: "",
+        status: "declined",
+        createdAt: sevenDaysAgo.toISOString(),
+        respondedAt: sevenDaysAgo.toISOString(),
+        completed: false,
+        completedAt: null
+      };
+
+      appData.signals = [demoSignal3, demoSignal2, demoSignal1, demoSignal4, ...appData.signals];
+
+      appData.records = [
+        {
+          id: createId("record"),
+          date: getTodayKey(threeDaysAgo),
+          signalId: demoSignal1.id,
+          message: demoSignal1.message,
+          memo: demoSignal1.memo,
+          createdAt: threeDaysAgo.toISOString()
+        },
+        {
+          id: createId("record"),
+          date: getTodayKey(yesterday),
+          signalId: demoSignal2.id,
+          message: demoSignal2.message,
+          memo: demoSignal2.memo,
+          createdAt: yesterday.toISOString()
+        },
+        ...appData.records
+      ];
+
+      const todayKey = getTodayKey();
+      const todayQuestion = getTodayQuestion(todayKey);
+      todayQuestion.answers.userA = {
+        text: "오늘은 네가 웃으면서 인사해준 게 제일 좋았어.",
+        createdAt: now.toISOString()
+      };
+      todayQuestion.answers.userB = {
+        text: "나는 네가 피곤해도 다정하게 말해준 순간이 고마웠어.",
+        createdAt: now.toISOString()
+      };
+      todayQuestion.revealed = true;
+      appData.questions[todayKey] = todayQuestion;
+
+      DataStore.save(appData);
+      showToast("데모 데이터가 생성되었어요.");
+      renderApp();
+    }
+
+    /********************************************************************
+     * Firebase Realtime Database 확장 예시
+     *
+     * 1) Firebase SDK 추가
+     * 2) DataStore.load / DataStore.save를 async 구조로 변경
+     * 3) users/{coupleId}, signals/{coupleId}, records/{coupleId}, questions/{coupleId}
+     *    형태로 분리 저장
+     * 4) onValue 구독으로 실시간 렌더링
+     *
+     * 추가 권장 기능:
+     * - Firebase Authentication 로그인
+     * - 부부 초대 코드
+     * - 민감 기록 필드 단위 암호화
+     * - 앱 잠금 PIN / 생체 인증
+     * - PWA manifest / service worker
+     * - 푸시 알림
+     * - 커플 기념일 알림
+     * - 질문 카테고리
+     * - 관계 만족도 체크인
+     * - 감정 다이어리
+     ********************************************************************/
+  </script>
+</body>
+</html>
